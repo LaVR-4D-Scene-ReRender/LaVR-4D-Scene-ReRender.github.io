@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html><head lang="en"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>LaVR</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="LaVR: Latent Space Conditioned Video Re-rendering using Large 4D Reconstruction Models">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LaVR: Latent Space Conditioned Video Re-rendering using Large 4D Reconstruction Models">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧇</text></svg>">
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/fontawesome.all.min.css">
+	<link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+	<script defer src="js/fontawesome.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/synced_video_selector.js"></script>
+    <script src="js/video_comparison.js"></script>
+
+</head>
+
+  <body>
+    <br>
+
+  <div class="container" id="header" style="text-align: center; margin: auto; ">
+    <div class="row" id="title-row" style="max-width: 100%; margin: 0 auto; display: inline-block;">
+
+      <h2 class="col-md-12 text-center" id="title">
+        
+        <b>LaVR</b>: Scene Latent Conditioned Generative Video Trajectory <br> Re-Rendering using Large 4D Reconstruction Models<br>
+        <br>
+      </h2>
+
+      <h4>
+            <!-- Supplementary Materials -->
+       	Anonymous Authors
+      <br>
+      </h4>
+      <br>
+            <h4>
+  	Under Review at CVPR 2026
+
+      </h4>
+
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('author-row').style.maxWidth = document.getElementById("title-row").clientWidth + 'px';
+  </script>
+      <br><br>
+    <!-- <br><br> -->
+
+  <div class="container" id="main" style="width:100%">
+
+<!-- ============================================================ -->
+    <!-- SECTION 1: NOVEL CAMERA TRAJECTORY GENERATION                -->
+    <!-- ============================================================ -->
+    <div class="row text-center" style="background-color:rgb(248, 248, 248);">
+      <div class="col-md-8 col-md-offset-2">
+        <h3> Generate views of a dynamic scene from a novel camera trajectory </h3><br>
+        <div class="text-center ">
+    <div style="display: inline-block;">
+          <ul class="nav nav-pills center-pills">
+            <li class="method-pill active" data-value="gen3c"
+                onclick="selectCompVideo(this, activeScenePill)"><a>Gen3C</a></li>
+            <li class="method-pill" data-value="trajcrafter"
+                onclick="selectCompVideo(this, activeScenePill)"><a>TrajectoryCrafter</a></li>
+            <li class="method-pill" data-value="recam"
+                onclick="selectCompVideo(this, activeScenePill)"><a>ReCamMaster</a></li>
+    </ul>
+    </div>
+    <!-- <div style="display: inline-block;" >
+      <div style="border-radius: 7px; border: 2px solid black;">
+        <ul class="nav nav-pills center-pills">
+    <li class="method-pill" data-value="4DGS"
+                    onclick="selectCompVideo(this, activeScenePill)"><a>Ours</a></li>
+              </ul>
+      </div>
+    </div> -->
+        </div>
+        <br>
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" id="compVideo0" loop playsinline autoplay muted>
+              <source src="static/videos/comparison/nerfds_0_gen3c_vs_ours.mp4"></source>
+            </video>
+          </div>
+          <script>
+            video0 = document.getElementById("compVideo0");
+            video1 = document.getElementById("compVideo1");
+            video0.addEventListener('loadedmetadata', function() {
+                if ( select){
+                    video0.play();
+                    // print video size
+                    console.log(video0.videoWidth, video0.videoHeight);
+                    video0.hidden = false;
+                    video1.hidden = true;
+                }
+            });
+            video1.addEventListener('loadedmetadata', function() {
+                if ( select){
+                    video1.play();
+                    // print video size
+                    console.log(video0.videoWidth, video0.videoHeight);
+                    video0.hidden = true;
+                    video1.hidden = false;
+                }
+            });
+          </script>
+          <div class="pill-row scene-pills" id="scene-pills">
+            <span class="pill scene-pill active" data-value="nerfds_0" onclick="selectCompVideo(activeMethodPill, this)">
+                <img class="thumbnail-img" src="static/videos/comparison/0_thumbnail.jpg" alt="0" width="64">
+            </span>
+            <span class="pill scene-pill" data-value="nerfds_1" onclick="selectCompVideo(activeMethodPill, this)">
+              <img class="thumbnail-img" src="static/videos/comparison/1_thumbnail.jpg" alt="1" width="64">
+            </span>
+            <span class="pill scene-pill" data-value="nerfds_4" onclick="selectCompVideo(activeMethodPill, this)">
+              <img class="thumbnail-img" src="static/videos/comparison/4_thumbnail.jpg" alt="4" width="64">
+            </span>
+            <span class="pill scene-pill" data-value="nerfds_3" onclick="selectCompVideo(activeMethodPill, this)">
+              <img class="thumbnail-img" src="static/videos/comparison/3_thumbnail.jpg" alt="3" width="64">
+            </span>
+            <span class="pill scene-pill" data-value="nerfds_2" onclick="selectCompVideo(activeMethodPill, this)">
+              <img class="thumbnail-img" src="static/videos/comparison/2_thumbnail.jpg" alt="2" width="64">
+            </span>
+          </div>
+    <br>
+          <p class="text-justify" style="text-align: center;">
+            Baseline method (middle) vs Ours (right). Click to select different baselines and scenes.
+          </p>
+    <br>
+          <script>
+          activeMethodPill = document.querySelector('.method-pill.active');
+          activeScenePill = document.querySelector('.scene-pill.active');
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: TRAINING SPEED COMPARISON                         -->
+    <!-- ============================================================ -->
+    <!--   -->
+        <br>
+
+    <div class="row text-center" style="background-color:rgb(255, 255, 255);">
+      <div class="col-md-8 col-md-offset-2">
+        <h3> Video Demos </h3><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 1: Candles                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/candles.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:60%; margin:0 auto">
+            Our method better preserves the shape of both the candles and the table.
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 2: Guitar                                         -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/guitar.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
+              <i>ReCamMaster</i> makes the man clips through the table, while <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort his body.
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 3: Tea                                            -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/tea.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:60%; margin:0 auto">
+            Our method is the only one to correctly render the front of the tea table.
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 4: Guitar                                         -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/cat.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:96%; margin:0 auto">
+            <i>ReCamMaster</i> hallucinates an extra tail on the side of its body, while <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort the cat.
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 5: Cat                                            -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/child_eating.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
+            <i>ReCamMaster</i> makes the boy's right arm clips through the bowl; <br>
+            <i>TrajectoryCrafter</i> makes the bowl in the woman's hands collide with the boy's head;  <br>
+            <i>Gen3C</i> distorts the boys face near the end of the video.
+          </p>
+        </div>
+
+        <br><br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 6: Guitar                                         -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/throw_paper.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
+          <i>ReCamMaster</i> shows spurious paper movement before the man even moves his hands. <br>
+          <i>TrajectoryCrafter</i> incorrectly renders the face, while <i>Gen3C</i> distorts the human body.
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 7: Guitar                                         -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/stretch.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:80%; margin:0 auto">
+            <i>ReCamMaster</i> hallucinates an extra arm, while <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort the human body.
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 8: Guitar                                         -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/valley.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
+            <!-- Our generated video is the only one where the cars on the road maintain visible throughout the video. -->
+            <i>ReCamMaster</i> and <i>TrajectoryCrafter</i> make the cars disappear or run off the road; <br>
+            <!-- <i>Gen3C</i>'s rendered video's rotation does not correctly follow the camera trajectory of an upward arc. -->
+            The camera trajectory of <i>Gen3C</i>'s rendered video does not seem to be an upward arc --- its rotation is not correct.
+
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 9: Guitar                                         -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/child.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
+             Both <i>ReCamMaster</i> and <i>TrajectoryCrafter</i> hallucinate non-existent objects behind the child, <br> while <i>Gen3C</i> shows a massive hole in the tent.
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 10: Guitar                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/basketball.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
+            <i>ReCamMaster</i> dislocates the basketball rim into the backboard, while <i>TrajectoryCrafter</i> distorts the entire hoop.   
+          </p>
+        </div>
+
+        <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 10: Guitar                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/desk.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:80%; margin:0 auto">
+            <i>ReCamMaster</i> incorrectly renders the shoe on the desk; <br> 
+            <i>Gen3C</i>'s rendered scene seems to be wiggling unnaturally near the end of the video; <br>
+            <i>TrajectoryCrafter</i> shows the wrong table geometry.
+          </p>
+        </div>
+
+        <br><br><br>
+        <!-- ============================================================ -->
+        <!-- END OF This VIDEO                                  -->
+        <!-- ============================================================ -->
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 10: Guitar                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/family_meal.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
+              <i>ReCamMaster</i> incorrectly shows that a woman is standing besides the fridge when she should be by the table. <br>
+               <i>Gen3C</i> shows a weird floating lamp and  incorrectly stretches the body and hand of the woman in the middle. <br>
+               <i>TrajectoryCrafter</i> distorts the fridge.
+          </p>
+        </div>
+
+        <br><br>
+        <!-- ============================================================ -->
+        <!-- END OF This VIDEO                                  -->
+        <!-- ============================================================ -->
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 10: Guitar                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/sheep.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:95%; margin:0 auto">
+            <i>ReCamMaster</i> hallucinates some spurious objects on the right; <br><i>Gen3C</i> and <i>TrajectoryCrafter</i> severely distort the wooden strips behind the person.
+          </p>
+        </div>
+
+        <br><br>
+        <!-- ============================================================ -->
+        <!-- END OF This VIDEO                                  -->
+        <!-- ============================================================ -->
+
+
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 10: Guitar                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/business_woman.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:95%; margin:0 auto">
+            <i>ReCamMaster</i> shows the wrong hand position near the end of the video --- it should be near her jaw. <br> <i>Gen3C</i> and <i>TrajectoryCrafter</i> distorts the woman's body.
+          </p>
+        </div>
+
+        <br><br>
+        <!-- ============================================================ -->
+        <!-- END OF This VIDEO                                  -->
+        <!-- ============================================================ -->
+
+
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 10: Guitar                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/africa.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:60%; margin:0 auto">
+            <i>ReCamMaster</i> hallucinates unrealistic structures for the curtain in the back; <br> <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort the people in the front.
+          </p>
+        </div>
+
+        <br><br>
+        <!-- ============================================================ -->
+        <!-- END OF This VIDEO                                  -->
+        <!-- ============================================================ -->
+
+
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 10: Guitar                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/cat_on_window.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:80%; margin:0 auto">
+            <i>ReCamMaster</i> shows flickering on the laptop screen and disolves the steel frame outside the window; <br><i>Gen3C</i> and <i>TrajectoryCrafter</i> make the laptop edges curved rather than rectangular.
+          </p>
+        </div>
+
+        <br><br>
+        <!-- ============================================================ -->
+        <!-- END OF This VIDEO                                  -->
+        <!-- ============================================================ -->
+
+
+
+
+
+      </div>
+    </div>
+    <br><br>
+
+
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: METHOD OVERVIEW / ARCHITECTURE COMPARISON         -->
+    <!-- ============================================================ -->
+
+    <div class="row text-center" style="background-color:rgb(248, 248, 248);">
+    <br><br>
+
+      <div class="col-md-8 col-md-offset-2">
+        <h3> Proposed Paradigm vs. Baselines' </h3><br>
+  <image src="static/img/methods_overview.jpg" width=85% style="display: block; margin: auto;"></image>
+  <br>
+        <p class="text-center" style="text-align: left; display: inline-block; max-width: 85%; line-height: 1.25;">
+          <!-- <b>Architecture comparison.</b> <br> -->
+          <b>(a)</b> Non-3D(4D)-conditioned methods, e.g., <i>ReCamMaster</i>, achieve high visual quality but lack geometric awareness, leading to inconsistencies. <br><br>
+          <b>(b)</b> Conditioning on 4D point cloud renders, as in <i>Gen3C</i>, <i>TrajectoryCrafter</i>, provides consistency, but reduces quality as point clouds re-rendering is sensitive to depth estimation errors. <br><br>
+          <b>(c)</b> Our proposed architecture utilizes the implicit geometric knowledge of a pre-trained large 4D reconstruction model (LRM) to achieve both high quality and consistency.
+        </p>
+                    <br><br>
+                    <br><br>
+
+  <!-- <image src="static/img/methods_overview.jpg" width=25% style="display: block; margin: auto;"></image>
+	
+	<h5 class="text-center">
+          On real-world data, we achieve 96 FPS, and train faster than previous and concurrent methods. <br> Circle size denotes training time. All methods are trained on a single RTX 3090 GPU.
+        </h5> -->
+	
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: Quantitative Results                              -->
+    <!-- ============================================================ -->
+    <div class="row text-center" style="background-color:rgb(240, 240, 240);">
+      <div class="col-md-8 col-md-offset-2">
+        <h3> Quantitative Results </h3><br>
+        <image src="./static/img/table.png" width="100%" style="display: block; margin: auto;"></image>
+        <h5 class="text-center">
+              <br>
+
+          Our re-rendered videos exhibit better consistency and more accurate camera trajectories than baselines'.
+        <br>
+            <br><br>
+    <br><br>
+        </h5>
+      </div>
+    </div>
+
+
+
+    <!-- ============================================================ -->
+    <!-- COMMENTED OUT SECTIONS BELOW                                 -->
+    <!-- ============================================================ -->
+
+    <!-- -->
+<!--     
+    <div class="row text-center"  style="background-color:rgb(240, 240, 240);">
+      <div class="col-md-8 col-md-offset-2">
+        <h3> Results on the Synthetic D-NeRF Dataset</h3><br>
+        <div class="text-center ">
+          <ul class="nav nav-pills center-pills">
+            <li class="method-pill-syn active" data-value="TiNeuVox"
+                onclick="selectCompVideo(this, activeScenePill_syn)"><a>TiNeuVox</a></li>
+            <li class="method-pill-syn" data-value="V4D"
+                onclick="selectCompVideo(this, activeScenePill_syn)"><a>V4D</a></li>
+            <li class="method-pill-syn" data-value="NDVG"
+                onclick="selectCompVideo(this, activeScenePill_syn)"><a>NDVG</a></li>
+            <li class="method-pill-syn" data-value="HexPlane"
+                onclick="selectCompVideo(this, activeScenePill_syn)"><a>HexPlane</a></li>
+            <li class="method-pill-syn" data-value="K-Planes"
+                onclick="selectCompVideo(this, activeScenePill_syn)"><a>K-Planes</a></li>
+          </ul>
+        </div>
+        <br>
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" id="compVideo1" loop playsinline autoplay muted>
+              <source src="static/videos/comparison/dnerf_trex_TiNeuVox_vs_ours.mp4">
+            </video>
+            
+          </div>
+                    
+
+          <div class="pill-row scene-pills" id="scene-pill-syns">
+            <span class="pill scene-pill-syn active" data-value="dnerf_trex" onclick="selectCompVideo(activeMethodPill_syn, this)">
+              <img class="thumbnail-img" src="static/thumbnails/trex.png" alt="trex" width="64">
+            </span>
+            <span class="pill scene-pill-syn" data-value="dnerf_hook" onclick="selectCompVideo(activeMethodPill_syn, this)">
+              <img class="thumbnail-img" src="static/thumbnails/hook.png" alt="hook" width="64">
+            </span>
+            <span class="pill scene-pill-syn" data-value="dnerf_mutant" onclick="selectCompVideo(activeMethodPill_syn, this)">
+              <img class="thumbnail-img" src="static/thumbnails/mutant.png" alt="mutant" width="64">
+            </span>
+            <span class="pill scene-pill-syn" data-value="dnerf_standup" onclick="selectCompVideo(activeMethodPill_syn, this)">
+              <img class="thumbnail-img" src="static/thumbnails/standup.png" alt="standup" width="64">
+            </span>
+          </div>
+	  <br>
+          <p class="text-justify" style="text-align: center;">
+            Baseline method (left) vs GauFRe (right). Click to select different methods and scenes. <br>
+	    Video results on novel views along with depth for our method are shown below.
+          </p>
+	  <br>
+          <script>
+          activeMethodPill_syn = document.querySelector('.method-pill-syn.active');
+          activeScenePill_syn = document.querySelector('.scene-pill-syn.active');
+          </script>
+
+	  <div style="display:inline-block;">
+	  <div class="video-compare-container" id="materialsDiv1">
+            <video class="video" id="dnerfextraVideoRot" loop playsinline autoPlay muted src="static/videos/dnerfextra/dnerf_trex_rotate.mp4" onplay="resizeAndPlay(this)"></video>
+            <canvas height=0 class="videoMerge" id="dnerfextraVideoRotMerge"></canvas>
+          </div>
+	  </div>
+	  &nbsp &nbsp &nbsp &nbsp &nbsp
+	  <div style="display:inline-block;">
+	  <div class="video-compare-container" id="materialsDiv0">
+            <video class="video" height="320" id="dnerfextraVideoFix" loop playsinline autoPlay muted src="static/videos/dnerfextra/dnerf_trex_fix.mp4" onplay="resizeAndPlay(this)"></video>
+            <canvas height=0 class="videoMerge" id="dnerfextraVideoFixMerge"></canvas>
+          </div>
+	  </div>
+
+	  <div>
+	    <p class="text-justify" style="text-align: center;">
+	      Our forward-warping deformation field design allows explicitly motion modeling.<br> Below we plot the trajectories of a subset of Gaussians.
+          </p>
+
+          <div class="video-container">
+    <video class="video" style="max-width: 100%;" id="dnerfextraVideoTrack" loop playsinline autoplay muted src="static/videos/dnerfextra/dnerf_trex_track.mp4">
+          </div>
+	  </div>
+	  
+	  <br>
+	  <br>
+	  <br>
+        </div>
+      </div>
+    </div> -->
+
+
+
+    <!-- <div class="row text-center" style="background-color:rgb(255, 255, 255);">
+      <div class="col-md-8 col-md-offset-2">
+        <h3> Method Ablations </h3><br>
+	
+        <div class="text-center ">
+          <ul class="nav nav-pills center-pills">
+            <li class="method-pill-abl active" data-value="bell_nostat"
+                onclick="selectCompVideo(this)"><a>No Static Gaussians</a></li>
+            <li class="method-pill-abl" data-value="bell_nowarm"
+                onclick="selectCompVideo(this)"><a>No IB Init</a></li>
+            <li class="method-pill-abl" data-value="cup_noqua"
+                onclick="selectCompVideo(this)"><a>Quaternion Addition</a></li>
+            <li class="method-pill-abl" data-value="cup_offopa"
+                onclick="selectCompVideo(this)"><a>Deform Opacity</a></li>
+            <li class="method-pill-abl" data-value="cup_offsh"
+                onclick="selectCompVideo(this)"><a>Deform SH</a></li>
+            <li class="method-pill-abl" data-value="cup_nooffscale"
+                onclick="selectCompVideo(this)"><a>Fix Scale</a></li>
+          </ul>
+        </div>
+	
+	<br>
+	
+        <div class="video-compare-container" id="materialsDiv">
+          <video class="video" id="ablVideo" loop playsinline autoPlay muted src="static/videos/ablation/bell_nostat_vs_ours.mp4" onplay="resizeAndPlay(this)"></video>
+          <canvas height=0 class="videoMerge" id="ablVideoMerge"></canvas>
+          <br>
+	  <br>
+          <p class="text-justify" style="text-align: center;">
+            Please move the slider to view the ablated variant (left) overlayed on GauFRe (right).
+          </p>
+          <br>
+          <script>
+          activeMethodPill_abl = document.querySelector('.method-pill-abl.active');
+          </script>
+        </div>
+        
+      </div>
+    </div>
+    <br><br> -->
+
+
+    <!-- <div class="row" style="background-color:rgb(255, 255, 255);">
+      <div class="col-md-8 col-md-offset-2">
+        <h3> 
+        </h3>
+        <div class="form-group col-md-10 col-md-offset-1" style="color:white">
+          <textarea id="bibtex" class="form-control" readonly >
+          </textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row text-center" style="background-color:rgb(50, 50, 50); color:white">
+      <div class="col-md-8 col-md-offset-2">
+        <h3> LaVR </h3><br>
+      </div>
+    </div> -->
+	
+
+  </div>
+
+
+</body></html>
