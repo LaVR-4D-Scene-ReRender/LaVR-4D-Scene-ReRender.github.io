@@ -3,7 +3,7 @@
     
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>LaVR: 4D Scene ReRenderer</title>
+    <title>LaVR</title>
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,26 +43,24 @@
 </head>
 
   <body>
-    <br>
+    <br><br>
 
   <div class="container" id="header" style="text-align: center; margin: auto; ">
     <div class="row" id="title-row" style="max-width: 100%; margin: 0 auto; display: inline-block;">
 
       <h2 class="col-md-12 text-center" id="title">
         
-        <b>LaVR</b>: Scene Latent Conditioned Generative Video Trajectory <br> Re-Rendering using Large 4D Reconstruction Models<br>
-        <br>
+        <b>LaVR</b>: Latent Space Conditioned Video Re-rendering using <br> Large 4D Reconstruction Models<br>
       </h2>
 
       <h4>
-            <!-- Supplementary Materials -->
-       	Anonymous Authors
-      <br>
+      <br><br>
+      <br>      
+      Supplementary Materials
+	<!-- Under Review at CVPR 2026 -->
       </h4>
-      <br>
             <h4>
-  	Under Review at CVPR 2026
-
+	Paper ID: #14522
       </h4>
 
     </div>
@@ -138,15 +136,12 @@
             <span class="pill scene-pill" data-value="nerfds_1" onclick="selectCompVideo(activeMethodPill, this)">
               <img class="thumbnail-img" src="static/videos/comparison/1_thumbnail.jpg" alt="1" width="64">
             </span>
-            <span class="pill scene-pill" data-value="nerfds_4" onclick="selectCompVideo(activeMethodPill, this)">
-              <img class="thumbnail-img" src="static/videos/comparison/4_thumbnail.jpg" alt="4" width="64">
-            </span>
             <span class="pill scene-pill" data-value="nerfds_3" onclick="selectCompVideo(activeMethodPill, this)">
               <img class="thumbnail-img" src="static/videos/comparison/3_thumbnail.jpg" alt="3" width="64">
             </span>
-            <span class="pill scene-pill" data-value="nerfds_2" onclick="selectCompVideo(activeMethodPill, this)">
+            <!-- <span class="pill scene-pill" data-value="nerfds_2" onclick="selectCompVideo(activeMethodPill, this)">
               <img class="thumbnail-img" src="static/videos/comparison/2_thumbnail.jpg" alt="2" width="64">
-            </span>
+            </span> -->
           </div>
     <br>
           <p class="text-justify" style="text-align: center;">
@@ -172,22 +167,6 @@
         <h3> Video Demos </h3><br>
 
         <!-- ============================================================ -->
-        <!-- VIDEO PAIR 1: Candles                                        -->
-        <!-- ============================================================ -->
-        <div class="text-center">
-          <div class="video-container">
-            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
-              <source src="static/videos/main_results/candles.mp4"></source>
-            </video>
-          </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
-            Our method better preserves the shape of both the candles and the table.
-          </p>
-        </div>
-
-        <br><br>
-
-        <!-- ============================================================ -->
         <!-- VIDEO PAIR 2: Guitar                                         -->
         <!-- ============================================================ -->
         <div class="text-center">
@@ -196,12 +175,30 @@
               <source src="static/videos/main_results/guitar.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
               <i>ReCamMaster</i> makes the man clips through the table, while <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort his body.
           </p>
         </div>
 
         <br><br>
+
+        <!-- ============================================================ -->
+        <!-- VIDEO PAIR 1: Candles                                        -->
+        <!-- ============================================================ -->
+        <div class="text-center">
+          <div class="video-container">
+            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
+              <source src="static/videos/main_results/candles.mp4"></source>
+            </video>
+          </div>
+          <p class="text-justify" style="text-align: center; width:60%; margin:0 auto">
+            Our method better preserves the shape of both the candles and the table.
+          </p>
+        </div>
+
+        <br><br>
+
+ 
 
         <!-- ============================================================ -->
         <!-- VIDEO PAIR 3: Tea                                            -->
@@ -212,7 +209,7 @@
               <source src="static/videos/main_results/tea.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:60%; margin:0 auto">
             Our method is the only one to correctly render the front of the tea table.
           </p>
         </div>
@@ -228,35 +225,19 @@
               <source src="static/videos/main_results/cat.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:96%; margin:0 auto">
             <i>ReCamMaster</i> hallucinates an extra tail on the side of its body, while <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort the cat.
           </p>
         </div>
 
         <br><br>
 
-        <!-- ============================================================ -->
-        <!-- VIDEO PAIR 5: Cat                                            -->
-        <!-- ============================================================ -->
-        <div class="text-center">
-          <div class="video-container">
-            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
-              <source src="static/videos/main_results/child_eating.mp4"></source>
-            </video>
-          </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
-            <i>ReCamMaster</i> makes the boy's right arm clips through the bowl; <br>
-            <i>TrajectoryCrafter</i> makes the bowl in the woman's hands collide with the boy's head;  <br>
-            <i>Gen3C</i> distorts the boys face near the end of the video.
-          </p>
-        </div>
 
-        <br><br><br>
 
         <!-- ============================================================ -->
         <!-- VIDEO PAIR 6: Guitar                                         -->
         <!-- ============================================================ -->
-        <div class="text-center">
+        <!-- <div class="text-center">
           <div class="video-container">
             <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
               <source src="static/videos/main_results/throw_paper.mp4"></source>
@@ -268,7 +249,7 @@
           </p>
         </div>
 
-        <br><br>
+        <br><br> -->
 
         <!-- ============================================================ -->
         <!-- VIDEO PAIR 7: Guitar                                         -->
@@ -279,7 +260,7 @@
               <source src="static/videos/main_results/stretch.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:80%; margin:0 auto">
             <i>ReCamMaster</i> hallucinates an extra arm, while <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort the human body.
           </p>
         </div>
@@ -295,7 +276,7 @@
               <source src="static/videos/main_results/valley.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
             <!-- Our generated video is the only one where the cars on the road maintain visible throughout the video. -->
             <i>ReCamMaster</i> and <i>TrajectoryCrafter</i> make the cars disappear or run off the road; <br>
             <!-- <i>Gen3C</i>'s rendered video's rotation does not correctly follow the camera trajectory of an upward arc. -->
@@ -306,21 +287,6 @@
 
         <br><br>
 
-        <!-- ============================================================ -->
-        <!-- VIDEO PAIR 9: Guitar                                         -->
-        <!-- ============================================================ -->
-        <div class="text-center">
-          <div class="video-container">
-            <video class="video" style="max-width: 100%;" loop playsinline autoplay muted controls>
-              <source src="static/videos/main_results/child.mp4"></source>
-            </video>
-          </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
-             Both <i>ReCamMaster</i> and <i>TrajectoryCrafter</i> hallucinate non-existent objects behind the child, <br> while <i>Gen3C</i> shows a massive hole in the tent.
-          </p>
-        </div>
-
-        <br><br>
 
         <!-- ============================================================ -->
         <!-- VIDEO PAIR 10: Guitar                                        -->
@@ -331,7 +297,7 @@
               <source src="static/videos/main_results/basketball.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
             <i>ReCamMaster</i> dislocates the basketball rim into the backboard, while <i>TrajectoryCrafter</i> distorts the entire hoop.   
           </p>
         </div>
@@ -347,7 +313,7 @@
               <source src="static/videos/main_results/desk.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:80%; margin:0 auto">
             <i>ReCamMaster</i> incorrectly renders the shoe on the desk; <br> 
             <i>Gen3C</i>'s rendered scene seems to be wiggling unnaturally near the end of the video; <br>
             <i>TrajectoryCrafter</i> shows the wrong table geometry.
@@ -368,7 +334,7 @@
               <source src="static/videos/main_results/family_meal.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:90%; margin:0 auto">
               <i>ReCamMaster</i> incorrectly shows that a woman is standing besides the fridge when she should be by the table. <br>
                <i>Gen3C</i> shows a weird floating lamp and  incorrectly stretches the body and hand of the woman in the middle. <br>
                <i>TrajectoryCrafter</i> distorts the fridge.
@@ -389,7 +355,7 @@
               <source src="static/videos/main_results/sheep.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:95%; margin:0 auto">
             <i>ReCamMaster</i> hallucinates some spurious objects on the right; <br><i>Gen3C</i> and <i>TrajectoryCrafter</i> severely distort the wooden strips behind the person.
           </p>
         </div>
@@ -410,7 +376,7 @@
               <source src="static/videos/main_results/business_woman.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:95%; margin:0 auto">
             <i>ReCamMaster</i> shows the wrong hand position near the end of the video --- it should be near her jaw. <br> <i>Gen3C</i> and <i>TrajectoryCrafter</i> distorts the woman's body.
           </p>
         </div>
@@ -431,7 +397,7 @@
               <source src="static/videos/main_results/africa.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:60%; margin:0 auto">
             <i>ReCamMaster</i> hallucinates unrealistic structures for the curtain in the back; <br> <i>Gen3C</i> and <i>TrajectoryCrafter</i> distort the people in the front.
           </p>
         </div>
@@ -452,7 +418,7 @@
               <source src="static/videos/main_results/cat_on_window.mp4"></source>
             </video>
           </div>
-          <p class="text-justify" style="text-align: center; width:100%; margin:0 auto">
+          <p class="text-justify" style="text-align: center; width:80%; margin:0 auto">
             <i>ReCamMaster</i> shows flickering on the laptop screen and disolves the steel frame outside the window; <br><i>Gen3C</i> and <i>TrajectoryCrafter</i> make the laptop edges curved rather than rectangular.
           </p>
         </div>
